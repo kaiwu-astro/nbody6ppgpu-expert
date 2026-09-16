@@ -1,0 +1,4 @@
+interface:
+  display_name: "NBODY6++GPU Expert"
+  short_description: "Refresh and search NBODY6++GPU source and manual under TMPDIR"
+  default_prompt: "Use $nbody6ppgpu-expert to refresh the TMPDIR resources under workspace-write and answer one precise question based on the source and the manual; do not request extra file write permissions."

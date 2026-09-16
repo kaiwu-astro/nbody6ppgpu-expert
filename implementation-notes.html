@@ -1,0 +1,13 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Implementation Notes</title>
+<ul>
+  <li>[20260719-193411]: No additional implementation decisions beyond the agreed plan for now; tests use a local bare remote and a temporary HOME, avoiding the user's real repositories and network access.</li>
+  <li>[20260719-193535]: The default repository may be fast-forwarded when it is a clean dev that is only behind origin/dev; if it is ahead locally or has diverged, it is treated as non-compliant, the user's repository is left untouched, and the skill's private cache is used instead.</li>
+  <li>[20260719-194340]: The fallback path or its cache parent directory must never follow a symlink out to an external repository; the fallback symlink is only replaced once the new copy has validated successfully, and a parent-directory escape fails outright.</li>
+  <li>[20260725-211500]: Moved all mutable runtime data (the manual, state, the source fallback copy, and the private venv) out of the skill install directory and into <code>${XDG_CACHE_HOME:-$HOME/.cache}/nbody6ppgpu-expert</code>, so the daily refresh never writes back into the Git working tree even when the skill files are installed via a symlink from a config repository.</li>
+  <li>[20260725-211500]: Added a one-shot machine-readable resource manifest output; on success it returns the source, Markdown, and PDF paths validated in that run together; <code>--print-repo</code> is kept as a compatibility interface, but the main flow no longer assumes the manual lives under a tracked <code>assets/</code> directory.</li>
+  <li>[20260725-213000]: Removed the two Git-tracked copies of the manual, to avoid having a "pinned asset" and a "daily-latest cache" act as two sources of truth; before removal, the then-current 2026-07-23 version and its state were migrated to the new user cache, and the old snapshots remain in Git history.</li>
+  <li>[20260725-215000]: A relative <code>XDG_CACHE_HOME</code>, or one that falls inside the skill or its host Git working tree, now falls back to the user's default cache, to avoid a bad environment variable re-polluting the repo; on the same day, both the PDF and Markdown hashes are re-validated before skipping, to keep the two formats paired with the recorded version.</li>
+  <li>[20260725-215000]: No cross-process file lock was added this round; the main flow now updates only once and lets subagents reuse the manifest, which removes the race within a single request, but two independent Codex sessions refreshing the same user cache for the first time at the same time is still a known edge case.</li>
+</ul>
