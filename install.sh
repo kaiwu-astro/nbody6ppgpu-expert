@@ -139,18 +139,18 @@ install_to() {
         return 1
     fi
 
-    rm -rf "$target_dir"
-    mkdir -p "$target_dir"
+    rm -rf "$target_dir" || return 1
+    mkdir -p "$target_dir" || return 1
 
-    cp "${source_dir}/SKILL.md" "$target_dir/"
+    cp "${source_dir}/SKILL.md" "$target_dir/" || return 1
     if [ -f "${source_dir}/LICENSE" ]; then
-        cp "${source_dir}/LICENSE" "$target_dir/"
+        cp "${source_dir}/LICENSE" "$target_dir/" || return 1
     fi
     if [ -d "${source_dir}/agents" ]; then
-        cp -R "${source_dir}/agents" "$target_dir/"
+        cp -R "${source_dir}/agents" "$target_dir/" || return 1
     fi
     if [ -d "${source_dir}/scripts" ]; then
-        cp -R "${source_dir}/scripts" "$target_dir/"
+        cp -R "${source_dir}/scripts" "$target_dir/" || return 1
         # Clean up any Python bytecode cache that may have come along with the source
         # directory; it is not needed to run the skill.
         find "$target_dir" -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true

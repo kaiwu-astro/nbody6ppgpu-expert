@@ -22,11 +22,18 @@ By default the CLI keeps one canonical copy and symlinks it into each agent's sk
 - Claude Code: `~/.claude/skills/nbody6ppgpu-expert` (symlink)
 - Codex: reads `~/.agents/skills/nbody6ppgpu-expert` directly
 
-Update and remove:
+Update and remove a global install:
 
 ```sh
 npx skills update nbody6ppgpu-expert -g
 npx skills remove nbody6ppgpu-expert -g
+```
+
+For a project install, run these from the project directory instead:
+
+```sh
+npx skills update nbody6ppgpu-expert -p
+npx skills remove nbody6ppgpu-expert
 ```
 
 ## Alternative install: shell script (fallback)
@@ -67,6 +74,12 @@ rm -rf "${CODEX_HOME:-$HOME/.codex}/skills/nbody6ppgpu-expert"
 >
 > ```sh
 > rm -rf ~/.claude/skills/nbody6ppgpu-expert "${CODEX_HOME:-$HOME/.codex}/skills/nbody6ppgpu-expert"
+> ```
+>
+> When switching from npx to the script, first run:
+>
+> ```sh
+> npx skills remove nbody6ppgpu-expert -g
 > ```
 
 ## Manual install (git clone)
