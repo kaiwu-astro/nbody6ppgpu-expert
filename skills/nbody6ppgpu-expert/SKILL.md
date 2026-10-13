@@ -1,6 +1,8 @@
 ---
 name: nbody6ppgpu-expert
 description: Source-and-manual lookup workflow for NBODY6++GPU / NBODY6ppGPU / Nbody6PPGPU-beijing. Use when the user asks about internal mechanisms, documented behavior, output formats, control parameters, data fields, common blocks, or Fortran routines, or when an analysis script needs source code and manual evidence.
+license: MIT
+compatibility: Requires Python 3.9+, git, and network access to github.com (official Nbody6PPGPU-beijing source) and nbody6ppgpu.github.io (official manual PDF). Designed for Claude Code and Codex.
 ---
 
 # NBODY6++GPU Expert Lookup

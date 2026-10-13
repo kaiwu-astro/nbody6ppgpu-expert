@@ -2,6 +2,10 @@
 # Install script for nbody6ppgpu-expert (POSIX sh, compatible with macOS / Ubuntu / Rocky Linux
 # and other environments without bash-only features).
 #
+# NOTE: this script is the fallback install method (e.g. for machines without Node.js).
+# The primary method is:
+#   npx skills add kaiwu-astro/nbody6ppgpu-expert
+#
 # One-line install:
 #   curl -fsSL https://raw.githubusercontent.com/kaiwu-astro/nbody6ppgpu-expert/main/install.sh | sh
 #
@@ -13,15 +17,16 @@
 #
 # Environment variables:
 #   NBODY6PPGPU_EXPERT_SOURCE   Testing only: skip the download and use this local directory
-#                               directly as the skill source directory (the directory itself
-#                               is the skill root, i.e. it contains SKILL.md).
+#                               directly as the skill source directory. The directory itself
+#                               is the skill root (it contains SKILL.md), i.e. it corresponds to
+#                               skills/nbody6ppgpu-expert/ in the repository.
 #   NBODY6PPGPU_EXPERT_TARBALL_URL   Testing only: override the tarball URL to download.
 #
 # Behavior: by default this installs to both Claude Code's ~/.claude/skills/nbody6ppgpu-expert
 # and Codex's ${CODEX_HOME:-~/.codex}/skills/nbody6ppgpu-expert; if the target already exists it
-# is removed first and then replaced with fresh content, leaving no leftovers. The installed
-# content does not include install.sh, README.md, .gitignore, tests/, .git, or other files not
-# needed to run the skill.
+# is removed first and then replaced with fresh content, leaving no leftovers. Only the skill
+# directory skills/nbody6ppgpu-expert/ of the repository is installed; install.sh, README.md,
+# tests/, .git, and other repo-level files are not included.
 
 set -e
 
@@ -112,17 +117,18 @@ else
 
     # A GitHub archive extracts to a single top-level directory named <repo>-<branch>.
     top_level_dir=$(find "$extract_dir" -mindepth 1 -maxdepth 1 -type d | head -n 1)
-    if [ -z "$top_level_dir" ] || [ ! -f "${top_level_dir}/SKILL.md" ]; then
-        echo "The extracted archive does not have the expected structure (SKILL.md not found)." >&2
+    skill_root="${top_level_dir}/skills/${SKILL_NAME}"
+    if [ -z "$top_level_dir" ] || [ ! -f "${skill_root}/SKILL.md" ]; then
+        echo "The extracted archive does not have the expected structure (skills/${SKILL_NAME}/SKILL.md not found)." >&2
         exit 1
     fi
-    source_dir="$top_level_dir"
+    source_dir="$skill_root"
 fi
 
 # Install the skill into the target directory: clear out the old directory first, then copy
 # only the files needed to run it.
-# Excludes install.sh, README.md, .gitignore, tests/, .git, implementation-notes.html, and other
-# non-essential files, but keeps SKILL.md, agents/, scripts/.
+# The skill directory contains only SKILL.md, agents/, and scripts/ (plus an optional LICENSE),
+# but the copy stays selective so stray files never end up in the install.
 install_to() {
     target_dir="$1"
     label="$2"
@@ -137,6 +143,9 @@ install_to() {
     mkdir -p "$target_dir"
 
     cp "${source_dir}/SKILL.md" "$target_dir/"
+    if [ -f "${source_dir}/LICENSE" ]; then
+        cp "${source_dir}/LICENSE" "$target_dir/"
+    fi
     if [ -d "${source_dir}/agents" ]; then
         cp -R "${source_dir}/agents" "$target_dir/"
     fi

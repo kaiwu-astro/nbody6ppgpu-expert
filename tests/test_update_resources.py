@@ -14,7 +14,9 @@ from pathlib import Path
 from unittest import mock
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "update_resources.py"
+SCRIPT = (
+    Path(__file__).resolve().parents[1] / "skills" / "nbody6ppgpu-expert" / "scripts" / "update_resources.py"
+)
 
 
 def load_updater():
